@@ -1,10 +1,14 @@
-from django.urls import path
-from .views import EventListCreateAPIView, EventDetailAPIView, EventUpdateAPIView, EventDeleteAPIView, AllEventsAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import EventViewSet, UserRegistrationView
+
+router = DefaultRouter()
+router.register(r'events', EventViewSet, basename='event')
 
 urlpatterns = [
-    path('events/', EventListCreateAPIView.as_view(), name='event-list-create'),
-    path('events/<int:pk>/', EventDetailAPIView.as_view(), name='event-detail'),
-    path('events/all/', AllEventsAPIView.as_view(), name='all-events'),
-    path('events/<int:pk>/update/', EventUpdateAPIView.as_view(), name='event-update'),
-    path('events/<int:pk>/delete/', EventDeleteAPIView.as_view(), name='event-delete'),
+    path('', include(router.urls)),
+    path('register/', UserRegistrationView.as_view(), name='register'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

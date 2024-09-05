@@ -1,37 +1,29 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from .models import Event
-from .serializers import EventSerializer
-
-from rest_framework import status
+from django.contrib.auth.models import User
+from .serializers import EventSerializer, UserRegistrationSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 
-class EventListCreateAPIView(generics.ListCreateAPIView):
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = UserRegistrationSerializer
+
+
+class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
+    @action(detail=False, methods=['get'])
+    def all(self, request):
+        events = Event.objects.all()
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
 
-class EventDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-
-
-class AllEventsAPIView(generics.ListAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-
-
-class EventUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    partial = True
-
-
-class EventDeleteAPIView(generics.RetrieveDestroyAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
