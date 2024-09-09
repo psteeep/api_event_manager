@@ -110,6 +110,9 @@ To manage your application with Docker Compose:
 - **Retrieve Event**: `GET /api/events/{id}/`
 - **Update Event**: `PATCH /api/events/{id}/`
 - **Delete Event**: `DELETE /api/events/{id}/`
+- **List My Event Registrations**: `GET /api/registrations/my/`
+Description: Retrieve a list of events that the authenticated user has registered for.
+- **Register for an Event**: `POST /api/registrations/`Description: Register the authenticated user for a specific event.
 
 ### Documentation
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Event
+from .models import Event, EventRegistration
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -22,3 +22,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
+
+class EventRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventRegistration
+        fields = ['id', 'user', 'event', 'registered_at']
