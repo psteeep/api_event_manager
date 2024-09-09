@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 class Event(models.Model):
-    name = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
     description = models.TextField()
     date = models.DateTimeField()

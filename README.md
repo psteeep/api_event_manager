@@ -114,6 +114,14 @@ To manage your application with Docker Compose:
 Description: Retrieve a list of events that the authenticated user has registered for.
 - **Register for an Event**: `POST /api/registrations/`Description: Register the authenticated user for a specific event.
 
+### Advanced Features
+
+- **Search and Filter Events**:
+  - **Search by Title**: `GET /api/events/?title=<search_term>`
+  - **Filter by Location**: `GET /api/events/?location=<location>`
+  - **Filter by Date**: `GET /api/events/?date=<date>`
+  - **Combine Filters**: `GET /api/events/?title=<search_term>&location=<location>&date=<date>`
+
 ### Documentation
 
 API documentation is available at `/swagger/` or `/redoc/` after starting the development server.

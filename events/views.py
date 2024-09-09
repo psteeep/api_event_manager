@@ -5,6 +5,8 @@ from .serializers import EventSerializer, UserRegistrationSerializer, EventRegis
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -17,10 +19,15 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+
+    filterset_fields = ['title', 'location', 'date']
+    search_fields = ['title', 'description']
+    ordering_fields = ['date', 'title']
 
     @action(detail=False, methods=['get'])
     def all(self, request):
-        events = Event.objects.all()
+        events = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
